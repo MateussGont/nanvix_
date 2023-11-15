@@ -33,9 +33,9 @@
  */
 struct
 {
-	gid_t group;    /* File's group owner. */
+	gid_t group;	/* File's group owner. */
 	char *filename; /* Filename.           */
-} args = { 0, NULL };
+} args = {0, NULL};
 
 /*
  * Prints program version and exits.
@@ -70,14 +70,14 @@ static void usage(void)
  */
 static void getargs(int argc, char *const argv[])
 {
-	int i;      /* Loop index.       */
-	char *arg;  /* Working argument. */
-	int state;  /* Processing state. */
+	int i;	   /* Loop index.       */
+	char *arg; /* Working argument. */
+	int state; /* Processing state. */
 
-	/* Processing states. */
-	#define GET_OPTIONS  0
-	#define GET_GROUP    1
-	#define GET_FILENAME 2
+/* Processing states. */
+#define GET_OPTIONS 0
+#define GET_GROUP 1
+#define GET_FILENAME 2
 
 	/* Get program arguments. */
 	state = GET_OPTIONS;
@@ -110,12 +110,14 @@ static void getargs(int argc, char *const argv[])
 			}
 
 			/* Display help information. */
-			else if (!strcmp(arg, "--help")) {
+			else if (!strcmp(arg, "--help"))
+			{
 				usage();
 			}
 
 			/* Display program version. */
-			else if (!strcmp(arg, "--version")) {
+			else if (!strcmp(arg, "--version"))
+			{
 				version();
 			}
 		}
@@ -136,7 +138,7 @@ static void getargs(int argc, char *const argv[])
  */
 static void do_chgrp(const char *filename, uid_t group)
 {
-	gid_t owner;    /* File's owner. */
+	gid_t owner;	/* File's owner. */
 	struct stat st; /* File status.  */
 
 	/* Get file status. */
@@ -167,4 +169,3 @@ int main(int argc, char *const argv[])
 
 	return (EXIT_FAILURE);
 }
-
