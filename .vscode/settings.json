@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "pm.h": "c",
+        "*.def": "c",
+        "*.tcc": "c",
+        "list": "c",
+        "initializer_list": "c",
+        "limits": "c",
+        "type_traits": "c"
+    }
+}
