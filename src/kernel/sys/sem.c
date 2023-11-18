@@ -41,12 +41,10 @@ Semaphore *create(int value, int id)
         return NULL; // O semáforo já existe com este ID
     }
 
-
-    Semaphore *sem = malloc(sizeof(Semaphore));
-    // Semaphore *sem = &semaphoreTable[id];
+    Semaphore *sem = &semaphoreTable[id];
     sem->value = value;
     sem->id = id;
-    sem->list->chain= NULL ;
+    sem->list = NULL ;
     
     
     return sem;
@@ -55,8 +53,6 @@ Semaphore *create(int value, int id)
 
 void destroy(Semaphore *sem)
 {
-   
-
     while (sem->list != NULL)
     {
         //cria uma struct temporaria
