@@ -50,7 +50,7 @@ void destroy(Semaphore *sem)
     while (current != NULL)
     {
         next = current->next;
-        free(current);
+        // free(current);
         current = next;
     }
 
