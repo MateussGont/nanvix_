@@ -52,16 +52,17 @@ Semaphore *create(int value, int id)
 
 void destroy(Semaphore *sem)
 {
-    while (sem->list != NULL)
+    struct process *current = sem->list;
+    struct process *next;
+
+    while (current != NULL)
     {
-        // cria uma struct temporaria
-        struct process *temp = sem->list;
-        sem->list = sem->list->next;
-        free(temp);
+        next = current->next;
+        current->next = NULL;
+        current = next;
     }
 
-    // Libera a estrutura do semáforo
-    free(sem);
+    sem->list = NULL;
 }
 
 void down(Semaphore *sem)
