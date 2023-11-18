@@ -20,7 +20,8 @@ destroy(): destrói o semáforo
 
 #define MAX_SEMAPHORES 100
 
-typedef struct {
+typedef struct
+{
     int value;
     int id;
     struct process *list;
@@ -28,8 +29,10 @@ typedef struct {
 
 Semaphore semaphoreTable[MAX_SEMAPHORES];
 
-Semaphore* create(int value, int id) {
-    if (id < 0 || id >= MAX_SEMAPHORES) {
+Semaphore *create(int value, int id)
+{
+    if (id < 0 || id >= MAX_SEMAPHORES)
+    {
         return NULL; // ID inválido
     }
     Semaphore *sem = &semaphoreTable[id];
@@ -39,22 +42,36 @@ Semaphore* create(int value, int id) {
     return sem;
 }
 
-void destroy(Semaphore *sem) {
-    // Aqui você deve implementar a lógica para liberar a memória de todos os processos na lista
-    sem->value = 2; //temporário
+void destroy(Semaphore *sem)
+{
+    struct process *current = sem->list;
+    struct process *next;
+
+    while (current != NULL)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+
+    sem->list = NULL;
 }
 
-void down(Semaphore *sem) {
+void down(Semaphore *sem)
+{
     sem->value--;
-    if (sem->value < 0) {
+    if (sem->value < 0)
+    {
         // Adicione este processo à lista sem->list
         // Bloqueie este processo
     }
 }
 
-void up(Semaphore *sem) {
+void up(Semaphore *sem)
+{
     sem->value++;
-    if (sem->value <= 0) {
+    if (sem->value <= 0)
+    {
         // Remova um processo P da lista sem->list
         // Desperte o processo P
     }
