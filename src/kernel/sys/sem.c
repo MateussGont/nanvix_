@@ -17,28 +17,39 @@ destroy(): destrói o semáforo
 #include <stdlib.h>
 #include "sys/sem.h"
 
-typedef struct Sem
-{
+typedef struct {
+    int value;
     int id;
-    float mutex;
-    char l;
-} Sem;
+    struct process *list;
+} Semaphore;
 
-Sem *sem_create()
-{
-    Sem *semaforo = NULL;
-    return semaforo;
+Semaphore* create(int value) {
+    Semaphore *sem = NULL;
+    if (sem == NULL) {
+        return NULL; // Falha na alocação de memória
+    }
+    sem->value = value;
+    sem->list = NULL;
+    return sem;
 }
 
-void down(/*Sem sem*/)
-{
+void destroy(Semaphore *sem) {
+    // Aqui você deve implementar a lógica para liberar a memória de todos os processos na lista
+    sem->value = 2;
 }
 
-void up(/*Sem sem*/)
-{
+void down(Semaphore *sem) {
+    sem->value--;
+    if (sem->value < 0) {
+        // Adicione este processo à lista sem->list
+        // Bloqueie este processo
+    }
 }
 
-void destroy(/*Sem sem*/)
-{
-    // free(sem);
+void up(Semaphore *sem) {
+    sem->value++;
+    if (sem->value <= 0) {
+        // Remova um processo P da lista sem->list
+        // Desperte o processo P
+    }
 }
