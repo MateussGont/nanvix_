@@ -35,26 +35,38 @@ Semaphore *create(int value, int id)
     {
         return NULL; // ID inválido
     }
-    Semaphore *sem = &semaphoreTable[id];
+
+    if (semaphoreTable[id].id == id)
+    {
+        return NULL; // O semáforo já existe com este ID
+    }
+
+
+    Semaphore *sem = malloc(sizeof(Semaphore));
+    // Semaphore *sem = &semaphoreTable[id];
     sem->value = value;
     sem->id = id;
-    sem->list = NULL;
+    sem->list->chain= NULL ;
+    
+    
     return sem;
+
 }
 
 void destroy(Semaphore *sem)
 {
-    struct process *current = sem->list;
-    struct process *next;
+   
 
-    while (current != NULL)
+    while (sem->list != NULL)
     {
-        next = current->next;
-        // free(current);
-        current = next;
+        //cria uma struct temporaria
+        struct process *temp = sem->list;
+        sem->list = sem->list->next;
+        free(temp);
     }
 
-    sem->list = NULL;
+    // Libera a estrutura do semáforo
+    free(sem);
 }
 
 void down(Semaphore *sem)
@@ -62,6 +74,7 @@ void down(Semaphore *sem)
     sem->value--;
     if (sem->value < 0)
     {
+
         // Adicione este processo à lista sem->list
         // Bloqueie este processo
     }
