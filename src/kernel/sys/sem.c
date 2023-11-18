@@ -15,7 +15,10 @@ destroy(): destrói o semáforo
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <nanvix/pm.h>
 #include "sys/sem.h"
+
+#define MAX_SEMAPHORES 100
 
 typedef struct {
     int value;
@@ -23,19 +26,22 @@ typedef struct {
     struct process *list;
 } Semaphore;
 
-Semaphore* create(int value) {
-    Semaphore *sem = NULL;
-    if (sem == NULL) {
-        return NULL; // Falha na alocação de memória
+Semaphore semaphoreTable[MAX_SEMAPHORES];
+
+Semaphore* create(int value, int id) {
+    if (id < 0 || id >= MAX_SEMAPHORES) {
+        return NULL; // ID inválido
     }
+    Semaphore *sem = &semaphoreTable[id];
     sem->value = value;
+    sem->id = id;
     sem->list = NULL;
     return sem;
 }
 
 void destroy(Semaphore *sem) {
     // Aqui você deve implementar a lógica para liberar a memória de todos os processos na lista
-    sem->value = 2;
+    sem->value = 2; //temporário
 }
 
 void down(Semaphore *sem) {
