@@ -41,11 +41,10 @@ Semaphore *create(int value, int id)
         return NULL; // O semáforo já existe com este ID
     }
 
-    // aponta pra tabela de semaforos
     Semaphore *sem = &semaphoreTable[id];
-    sem->value = value; // seta valor do semaforo
-    sem->id = id;       /* seta id*/
-    sem->list = NULL;   /*seta ponteiro da lista de processos para null*/
+    sem->value = value;
+    sem->id = id;
+    sem->list = NULL;
 
     return sem;
 }
@@ -63,6 +62,13 @@ void destroy(Semaphore *sem)
     }
 
     sem->list = NULL;
+
+    // Verifica se a lista de processos está vazia
+    if (sem->list == NULL)
+    {
+        // Remove o semáforo da semaphoreTable
+        sem->id = -1;
+    }
 }
 
 void down(Semaphore *sem)
