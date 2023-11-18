@@ -41,21 +41,20 @@ Semaphore *create(int value, int id)
         return NULL; // O semáforo já existe com este ID
     }
 
+    // aponta pra tabela de semaforos
     Semaphore *sem = &semaphoreTable[id];
-    sem->value = value;
-    sem->id = id;
-    sem->list = NULL ;
-    
-    
-    return sem;
+    sem->value = value; // seta valor do semaforo
+    sem->id = id;       /* seta id*/
+    sem->list = NULL;   /*seta ponteiro da lista de processos para null*/
 
+    return sem;
 }
 
 void destroy(Semaphore *sem)
 {
     while (sem->list != NULL)
     {
-        //cria uma struct temporaria
+        // cria uma struct temporaria
         struct process *temp = sem->list;
         sem->list = sem->list->next;
         free(temp);
