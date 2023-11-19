@@ -70,15 +70,17 @@ void destroy(Semaphore *sem)
         sem->id = -1;
     }
 }
-
 void down(Semaphore *sem)
 {
     sem->value--;
+
     if (sem->value < 0)
     {
+        
+        sem->list->next = sem; // Adiciona este semáforo à lista global de semáforos em espera
+        sem->list->next->state = PROC_SLEEPING; // Bloqueia este processo
 
-        // Adicione este processo à lista sem->list
-        // Bloqueie este processo
+       
     }
 }
 
@@ -87,7 +89,12 @@ void up(Semaphore *sem)
     sem->value++;
     if (sem->value <= 0)
     {
-        // Remova um processo P da lista sem->list
-        // Desperte o processo P
+        // Remove o processo da sem->list
+        struct process *p = sem->list;
+        sem->list = sem->list->next;
+
+        // desperta o processo
+        p->state = PROC_RUNNING;
+        p->next = NULL;
     }
 }
