@@ -22,6 +22,7 @@
 
 #include <nanvix/const.h>
 #include <nanvix/pm.h>
+#include "sys/sem.h"
 
 #define MAX_SEMAPHORES 100
 #ifndef _ASM_FILE_
@@ -34,6 +35,20 @@
 #define SETVAL 1   /**< Sets the value of a semaphore.    */
 #define IPC_RMID 3 /**< Destroys a semaphore.            */
 /**@}*/
+typedef struct
+{
+    int value;
+    int id;
+    volatile int lock; // Adiciona um bloqueio à estrutura do semáforo
+    struct process *list;
+} Semaphore;
+
+extern Semaphore semaphoreTable[MAX_SEMAPHORES];
+
+extern Semaphore *create(int value, int id);
+extern void destroy(Semaphore *sem);
+extern void down(Semaphore *sem);
+extern void up(Semaphore *sem);
 
 /* Forward definitions. */
 extern int semget(unsigned int key);
