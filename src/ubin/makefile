@@ -49,7 +49,7 @@
 
 # Builds everything.
 all: cat chgrp chmod chown cp echo kill ln login ls mv nice pwd rm stat sync \
-	 touch tsh ps clear nim sleep
+	 touch tsh ps clear nim sleep semget semctl semop
 
 # Builds cat.
 cat: 
