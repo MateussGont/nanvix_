@@ -41,14 +41,19 @@ Semaphore *create(int value)
 
     // Inicializa novo semaforo na tabela
     Semaphore *sem = &semaphoreTable[id];
-    sem->process = curr_proc; // aponta para o proceso em execução
-    sem->value = value;
-    sem->id = id;
+    sem->process = curr_proc;         // aponta para o proceso em execução
+    sem->value = value;               // seta valor passado como parametro
+    sem->id = id;                     // seta id do semaforo para sua posição dentro da tabela
     sem->chain = sem->process->chain; // Inicializa a lista de processos em sleep
 
     return sem;
 }
 
+/*
+    DESTROY: destroi um semaforo fazendo com que o ponteiro da tabela aponte para variaveis invalidas
+
+    *Atenção, não contrei uma maneira de dar flush e liberar a memoria já que a função free não estava funcionando
+*/
 void destroy(Semaphore *sem)
 {
     sem->process = NULL;
@@ -63,6 +68,12 @@ void destroy(Semaphore *sem)
     }
 }
 
+/*
+DOWN: testa o valor do semáforo. Se esse valor for maior que zero, ele é decrementado e
+o processo continua sua execução normalmente. Caso contrário, o processo é bloqueado.
+
+  *Atenção, mecanismo escolhido para exclusão mutua foi de uma pesquisa que fiz e descobri que existe uma tratativa do gcc para operações atomicas.
+*/
 void down(Semaphore *sem)
 {
     while (__sync_lock_test_and_set(&sem->lock, 1))
@@ -82,6 +93,8 @@ void down(Semaphore *sem)
 
 void up(Semaphore *sem)
 {
+    while (__sync_lock_test_and_set(&sem->lock, 1))
+        ;
     if (sem->value == 0 && sem->chain != NULL)
     {
         wakeup(sem->chain);
@@ -91,4 +104,6 @@ void up(Semaphore *sem)
     {
         sem->value++;
     }
+
+    __sync_lock_release(&sem->lock);
 }
