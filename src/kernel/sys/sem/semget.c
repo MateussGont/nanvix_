@@ -13,9 +13,21 @@ ciado a key. Em caso de erro, -1 deve ser retornado.
 #include <nanvix/klib.h>
 #include <nanvix/pm.h>
 #include <stdio.h>
+#include <sys/sem.h>
 
 PUBLIC int sys_semget(int key)
 {
-    kprintf("Ola kernel");
-    return key;
+
+    // Cria o semáforo caso não exista um
+    Semaphore *createdSem = create(2, key);
+
+    if (createdSem->value != 2)
+    {
+        // Tratar erro ao criar semáforo
+        kprintf("Erro ao criar o semáforo.\n");
+        return -1;
+    }
+
+    kprintf("Semaforo criado com sucesso.\n");
+    return createdSem->value; // Retorna o ID do semáforo recém-criado
 }

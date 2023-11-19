@@ -16,17 +16,9 @@ destroy(): destrói o semáforo
 #include <stdio.h>
 #include <stdlib.h>
 #include <nanvix/pm.h>
-#include "sys/sem.h"
+#include <sys/sem.h>
 
 #define MAX_SEMAPHORES 100
-
-typedef struct
-{
-    int value;
-    int id;
-    volatile int lock; // Adiciona um bloqueio à estrutura do semáforo
-    struct process *list;
-} Semaphore;
 
 Semaphore semaphoreTable[MAX_SEMAPHORES];
 
