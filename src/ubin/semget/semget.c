@@ -106,5 +106,9 @@ int main(int argc, char *const argv[])
     // Reading Arguments
     getargs(argc, argv);
 
-    semget(2);
+    int x = semget(2);
+
+    printf("\n %d - retorno kernel ", x);
+
+    return 0;
 }
