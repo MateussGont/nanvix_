@@ -20,22 +20,10 @@
 #ifndef SEM_H_
 #define SEM_H_
 
-
 #include <nanvix/const.h>
 #include <nanvix/pm.h>
 
 #define MAX_SEMAPHORES 100
-
-typedef struct
-{
-    int value;
-    int id;
-    struct process *list;
-} Semaphore;
-
-extern struct Semaphore semaphoreTable[MAX_SEMAPHORES];
-
-
 
 /**
  * @brief Comand values for semaphores.
@@ -50,6 +38,5 @@ extern struct Semaphore semaphoreTable[MAX_SEMAPHORES];
 extern int semget(unsigned);
 extern int semctl(int, int, int);
 extern int semop(int, int);
-
 
 #endif /* SEM_H_ */

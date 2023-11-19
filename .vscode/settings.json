@@ -6,6 +6,7 @@
         "list": "c",
         "initializer_list": "c",
         "limits": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "stdlib.h": "c"
     }
 }
