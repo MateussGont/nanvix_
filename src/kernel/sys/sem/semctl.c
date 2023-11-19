@@ -26,13 +26,13 @@ PUBLIC int sys_semctl(int semid, int cmd, int val)
     if (cmd == GETVAL && semid == semaphoreTable[semid].id)
     {
         kprintf("\n GETVAL - KERNEL - %d", semaphoreTable[semid].value);
-        return semaphoreTable[semid].value;
+        return semaphoreTable[semid].value; // GETVAL, retorna o valor corrente do semáforo
     }
     else if (cmd == SETVAL && semid == semaphoreTable[semid].id)
     {
         semaphoreTable[semid].value = val;
-        kprintf("\n SETVAL - KERNEL - %d ", semaphoreTable[semid].value);
-        kprintf("ID - SEMCTL - %d", semaphoreTable[semid].id);
+        kprintf("\n SETVAL - KERNEL - %d ", semaphoreTable[semid].value); // SETVAL, define o valor do semáforo como sendo val
+        kprintf("\n ID - SEMCTL - %d \n", semaphoreTable[semid].id);
         return 0;
     }
     else if (cmd == IPC_RMID && semid == semaphoreTable[semid].id)
@@ -42,8 +42,8 @@ PUBLIC int sys_semctl(int semid, int cmd, int val)
 
         if (semaphoreTable[semid].process == NULL)
         {
-            destroy(&semaphoreTable[semid]);
-            kprintf("\n IPC_RMID - KERNEL - %d (Se value not null conferir)", semaphoreTable[semid].value);
+            destroy(&semaphoreTable[semid]); // IPC_RMID, desvincula o semáforo do processo corrente e o destrói caso não esteja mais sendo usado.
+            kprintf("\n IPC_RMID - KERNEL - %d (Se value not null conferir)\n", semaphoreTable[semid].value);
             return 0;
         }
     }
