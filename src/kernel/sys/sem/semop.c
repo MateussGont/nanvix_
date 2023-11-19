@@ -42,5 +42,9 @@ PUBLIC int sys_semop(int semid, int op)
             return -1;
         }
     }
-    return -1;
+    else
+    {
+        kprintf("Semaforo inexistente com esse ID SEMOP.C");
+        return -1;
+    }
 }
