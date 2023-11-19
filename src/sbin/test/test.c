@@ -496,6 +496,191 @@ int semaphore_test3(void)
 	return (0);
 }
 
+int semaphore_test4(void)
+{
+    pid_t pid;                  /* Process ID.              */
+    int buffer_fd;              /* Buffer file descriptor.  */
+    int empty;                  /* Empty positions.         */
+    int full;                   /* Full positions.          */
+    int mutex;                  /* Mutex.                   */
+    const int BUFFER_SIZE = 32; /* Buffer size.             */
+    const int NR_PRODUCERS = 2; /* Number of producers.     */
+    const int NR_CONSUMERS = 2; /* Number of consumers.     */
+    const int NR_ITEMS = 256;   /* Number of items to send. */
+
+    /* Create buffer.*/
+    buffer_fd = open("buffer", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+    if (buffer_fd < 0)
+        return (-1);
+
+    /* Create semaphores. */
+    SEM_CREATE(mutex, 1);
+    SEM_CREATE(empty, BUFFER_SIZE);
+    SEM_CREATE(full, 0);
+
+    /* Initialize semaphores. */
+    SEM_INIT(empty, BUFFER_SIZE);
+    SEM_INIT(full, 0);
+    SEM_INIT(mutex, 1);
+
+    /* Create multiple producers. */
+    for (int i = 0; i < NR_PRODUCERS; i++)
+    {
+        if ((pid = fork()) < 0)
+            return (-1);
+
+        /* Producer. */
+        else if (pid == 0)
+        {
+            for (int item = i; item < NR_ITEMS; item += NR_PRODUCERS)
+            {
+                SEM_DOWN(empty);
+                SEM_DOWN(mutex);
+
+                PUT_ITEM(buffer_fd, item);
+
+                SEM_UP(mutex);
+                SEM_UP(full);
+            }
+
+            _exit(EXIT_SUCCESS);
+        }
+    }
+
+    /* Create multiple consumers. */
+    for (int i = 0; i < NR_CONSUMERS; i++)
+    {
+        if ((pid = fork()) < 0)
+            return (-1);
+
+        /* Consumer. */
+        else if (pid == 0)
+        {
+            int item;
+
+            do
+            {
+                SEM_DOWN(full);
+                SEM_DOWN(mutex);
+
+                GET_ITEM(buffer_fd, item);
+
+                SEM_UP(mutex);
+                SEM_UP(empty);
+            } while (item != (NR_ITEMS - 1));
+
+            _exit(EXIT_SUCCESS);
+        }
+    }
+
+    /* Wait for all processes to finish. */
+    for (int i = 0; i < NR_PRODUCERS + NR_CONSUMERS; i++)
+        wait(NULL);
+
+    /* Destroy semaphores. */
+    SEM_DESTROY(mutex);
+    SEM_DESTROY(empty);
+    SEM_DESTROY(full);
+
+    close(buffer_fd);
+    unlink("buffer");
+
+    return (0);
+}
+
+
+int semaphore_test4(void)
+{
+    pid_t pid;                  /* Process ID.              */
+    int buffer_fd;              /* Buffer file descriptor.  */
+    int empty;                  /* Empty positions.         */
+    int full;                   /* Full positions.          */
+    int mutex;                  /* Mutex.                   */
+    const int BUFFER_SIZE = 32; /* Buffer size.             */
+    const int NR_PRODUCERS = 2; /* Number of producers.     */
+    const int NR_CONSUMERS = 2; /* Number of consumers.     */
+    const int NR_ITEMS = 256;   /* Number of items to send. */
+
+    /* Create buffer.*/
+    buffer_fd = open("buffer", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+    if (buffer_fd < 0)
+        return (-1);
+
+    /* Create semaphores. */
+    SEM_CREATE(mutex, 1);
+    SEM_CREATE(empty, BUFFER_SIZE);
+    SEM_CREATE(full, 0);
+
+    /* Initialize semaphores. */
+    SEM_INIT(empty, BUFFER_SIZE);
+    SEM_INIT(full, 0);
+    SEM_INIT(mutex, 1);
+
+    /* Create multiple producers. */
+    for (int i = 0; i < NR_PRODUCERS; i++)
+    {
+        if ((pid = fork()) < 0)
+            return (-1);
+
+        /* Producer. */
+        else if (pid == 0)
+        {
+            for (int item = i; item < NR_ITEMS; item += NR_PRODUCERS)
+            {
+                SEM_DOWN(empty);
+                SEM_DOWN(mutex);
+
+                PUT_ITEM(buffer_fd, item);
+
+                SEM_UP(mutex);
+                SEM_UP(full);
+            }
+
+            _exit(EXIT_SUCCESS);
+        }
+    }
+
+    /* Create multiple consumers. */
+    for (int i = 0; i < NR_CONSUMERS; i++)
+    {
+        if ((pid = fork()) < 0)
+            return (-1);
+
+        /* Consumer. */
+        else if (pid == 0)
+        {
+            int item;
+
+            do
+            {
+                SEM_DOWN(full);
+                SEM_DOWN(mutex);
+
+                GET_ITEM(buffer_fd, item);
+
+                SEM_UP(mutex);
+                SEM_UP(empty);
+            } while (item != (NR_ITEMS - 1));
+
+            _exit(EXIT_SUCCESS);
+        }
+    }
+
+    /* Wait for all processes to finish. */
+    for (int i = 0; i < NR_PRODUCERS + NR_CONSUMERS; i++)
+        wait(NULL);
+
+    /* Destroy semaphores. */
+    SEM_DESTROY(mutex);
+    SEM_DESTROY(empty);
+    SEM_DESTROY(full);
+
+    close(buffer_fd);
+    unlink("buffer");
+
+    return (0);
+}
+
 /*============================================================================*
  *                                FPU test                                    *
  *============================================================================*/
