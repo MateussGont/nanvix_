@@ -19,9 +19,9 @@ PUBLIC int sys_semget(int key)
 {
 
     // Cria o semáforo caso não exista um
-    Semaphore *createdSem = create(2, key);
+    Semaphore *createdSem = create(key);
 
-    if (createdSem->value != 2)
+    if (createdSem->value != 0)
     {
         // Tratar erro ao criar semáforo
         kprintf("Erro ao criar o semáforo.\n");

@@ -44,7 +44,7 @@ typedef struct
 } Semaphore;
 
 extern Semaphore semaphoreTable[MAX_SEMAPHORES];
-extern Semaphore *create(int value, int id);
+extern Semaphore *create(int id);
 extern void destroy(Semaphore *sem);
 extern void down(Semaphore *sem);
 extern void up(Semaphore *sem);

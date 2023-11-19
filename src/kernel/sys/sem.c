@@ -22,7 +22,7 @@ destroy(): destrói o semáforo
 
 Semaphore semaphoreTable[MAX_SEMAPHORES];
 
-Semaphore *create(int value, int id)
+Semaphore *create(int id)
 {
     if (id < 0 || id >= MAX_SEMAPHORES)
     {
@@ -35,7 +35,7 @@ Semaphore *create(int value, int id)
     }
 
     Semaphore *sem = &semaphoreTable[id];
-    sem->value = value;
+    sem->value = 0;
     sem->id = id;
     sem->list = NULL;
 
