@@ -17,47 +17,44 @@ destroy(): destrói o semáforo
 #include <stdlib.h>
 #include <nanvix/pm.h>
 #include <sys/sem.h>
+#include <nanvix/klib.h>
 
 #define MAX_SEMAPHORES 100
 
 Semaphore semaphoreTable[MAX_SEMAPHORES];
 
-Semaphore *create(int id)
+Semaphore *create(int value)
 {
-    if (id < 0 || id >= MAX_SEMAPHORES)
+    // Encontra um ID de semáforo não utilizado.
+    int id = 0;
+    while (id < MAX_SEMAPHORES && semaphoreTable[id].id == id)
     {
-        return NULL; // ID inválido
+        id++;
     }
 
-    if (semaphoreTable[id].id == id)
+    // Se todos os IDs estão em uso, retorna NULL.
+    if (id == MAX_SEMAPHORES)
     {
-        return NULL; // O semáforo já existe com este ID
+        kprintf("KERNEL - SEM.C - TABELA CHEIA");
+        return NULL;
     }
 
+    // Inicializa novo semaforo na tabela
     Semaphore *sem = &semaphoreTable[id];
-    sem->value = 0;
+    sem->process = curr_proc; // aponta para o proceso em execução
+    sem->value = value;
     sem->id = id;
-    sem->list = NULL;
+    sem->chain = sem->process->chain; // Inicializa a lista de processos em sleep
 
     return sem;
 }
 
 void destroy(Semaphore *sem)
 {
-    struct process *current = sem->list;
-    struct process *next;
-
-    while (current != NULL)
-    {
-        next = current->next;
-        current->next = NULL;
-        current = next;
-    }
-
-    sem->list = NULL;
+    sem->process = NULL;
 
     // Verifica se a lista de processos está vazia
-    if (sem->list == NULL)
+    if (sem->process == NULL)
     {
         // Remove o semáforo da semaphoreTable
         sem->id = -1;
@@ -74,10 +71,8 @@ void down(Semaphore *sem)
         sem->value--;
     }
     else
-    {
-        // Bloqueia o processo atual
-        struct process *current = sem->list; // Obtenha o processo atual
-        current->state = PROC_DEAD;
+    { // Bloqueia o processo atual
+        sleep(sem->chain, 0);
     }
 
     __sync_lock_release(&sem->lock); // Libera o bloqueio
@@ -85,15 +80,13 @@ void down(Semaphore *sem)
 
 void up(Semaphore *sem)
 {
-    sem->value++;
-    if (sem->value <= 0)
+    if (sem->value == 0 && sem->chain != NULL)
     {
-        // Remove o processo da sem->list
-        struct process *p = sem->list;
-        sem->list = sem->list->next;
-
-        // desperta o processo
-        p->state = PROC_RUNNING;
-        p->next = NULL;
+        wakeup(sem->chain);
+        sem->chain = NULL;
+    }
+    else
+    {
+        sem->value++;
     }
 }

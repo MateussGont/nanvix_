@@ -35,22 +35,24 @@
 #define SETVAL 1   /**< Sets the value of a semaphore.    */
 #define IPC_RMID 3 /**< Destroys a semaphore.            */
 /**@}*/
-typedef struct
+typedef struct Semaphore
 {
+    unsigned key;
     int value;
     int id;
     volatile int lock; // Adiciona um bloqueio à estrutura do semáforo
-    struct process *list;
+    struct process **chain;
+    struct process *process;
 } Semaphore;
 
 extern Semaphore semaphoreTable[MAX_SEMAPHORES];
-extern Semaphore *create(int id);
+extern Semaphore *create(int value);
 extern void destroy(Semaphore *sem);
 extern void down(Semaphore *sem);
 extern void up(Semaphore *sem);
 
 /* Forward definitions. */
-extern int semget(unsigned int key);
+extern int semget(unsigned key);
 extern int semctl(int semid, int cmd, int val);
 extern int semop(int semid, int op);
 
