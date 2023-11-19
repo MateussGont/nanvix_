@@ -19,6 +19,7 @@
 
 #include <nanvix/syscall.h>
 #include <errno.h>
+#include <sys/sem.h>
 
 /**
  * @brief Performs control operations in a semaphore.
@@ -27,14 +28,13 @@ int semctl(int semid, int cmd, int val)
 {
 	int ret;
 
-	__asm__ volatile (
+	__asm__ volatile(
 		"int $0x80"
-		: "=a" (ret)
-		: "0" (NR_semctl),
-		  "b" (semid),
-		  "c" (cmd),
-		  "d" (val)
-	);
+		: "=a"(ret)
+		: "0"(NR_semctl),
+		  "b"(semid),
+		  "c"(cmd),
+		  "d"(val));
 
 	/* Error. */
 	if (ret < 0)

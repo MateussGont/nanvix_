@@ -19,6 +19,7 @@
 
 #include <nanvix/syscall.h>
 #include <errno.h>
+#include <sys/sem.h>
 
 /**
  * @brief Performs operations in a semaphore.
@@ -27,13 +28,12 @@ int semop(int semid, int op)
 {
 	int ret;
 
-	__asm__ volatile (
+	__asm__ volatile(
 		"int $0x80"
-		: "=a" (ret)
-		: "0" (NR_semop),
-		  "b" (semid),
-		  "c" (op)
-	);
+		: "=a"(ret)
+		: "0"(NR_semop),
+		  "b"(semid),
+		  "c"(op));
 
 	/* Error. */
 	if (ret < 0)
@@ -44,4 +44,3 @@ int semop(int semid, int op)
 
 	return (ret);
 }
-

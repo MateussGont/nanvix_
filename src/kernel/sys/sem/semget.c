@@ -12,11 +12,10 @@ ciado a key. Em caso de erro, -1 deve ser retornado.
 #include <nanvix/hal.h>
 #include <nanvix/klib.h>
 #include <nanvix/pm.h>
-#include <sys/sem.h>
 #include <stdio.h>
 
 PUBLIC int sys_semget(int key)
 {
-    kprintf("Ola kernel: %d", key);
+    kprintf("Ola kernel");
     return key;
 }

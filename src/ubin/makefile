@@ -43,6 +43,9 @@
 .PHONY: clear
 .PHONY: nim
 .PHONY: sleep
+.PHONY: semget
+.PHONY: semctl
+.PHONY: semop
 
 # Builds everything.
 all: cat chgrp chmod chown cp echo kill ln login ls mv nice pwd rm stat sync \
@@ -144,6 +147,17 @@ nim:
 sleep: 
 	$(CC) $(CFLAGS) $(LDFLAGS) -D TESTE sleep/*.c -o $(UBINDIR)/sleep $(LIBDIR)/libc.a
 
+# Builds semget.
+semget: 
+	$(CC) $(CFLAGS) $(LDFLAGS) -D TESTE semget/*.c -o $(UBINDIR)/semget $(LIBDIR)/libc.a
+
+# Builds semctl.
+semctl: 
+	$(CC) $(CFLAGS) $(LDFLAGS) -D TESTE semctl/*.c -o $(UBINDIR)/semctl $(LIBDIR)/libc.a
+
+# Builds semop.
+semop: 
+	$(CC) $(CFLAGS) $(LDFLAGS) -D TESTE semop/*.c -o $(UBINDIR)/semop $(LIBDIR)/libc.a
 
 # Clean compilation files.
 clean:
@@ -171,3 +185,6 @@ clean:
 	@rm -f $(UBINDIR)/clear
 	@rm -f $(UBINDIR)/nim
 	@rm -f $(UBINDIR)/sleep
+	@rm -f $(UBINDIR)/semget
+	@rm -f $(UBINDIR)/semctl
+	@rm -f $(UBINDIR)/semop

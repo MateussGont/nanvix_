@@ -19,20 +19,20 @@
 
 #include <nanvix/syscall.h>
 #include <errno.h>
+#include <sys/sem.h>
 
 /**
  * @brief Creates a semaphore.
  */
-int semget(unsigned key)
+int semget(unsigned int key)
 {
 	int ret;
 
-	__asm__ volatile (
+	__asm__ volatile(
 		"int $0x80"
-		: "=a" (ret)
-		: "0" (NR_semget),
-		  "b" (key)
-	);
+		: "=a"(ret)
+		: "0"(NR_semget),
+		  "b"(key));
 
 	/* Error. */
 	if (ret < 0)
