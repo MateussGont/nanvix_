@@ -12,13 +12,13 @@ bloqueado no semáforo, o processo é desbloqueado. Caso contrário o valor do s
 
 destroy(): destrói o semáforo
 */
-
+#include <sys/sem.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <nanvix/pm.h>
-#include "sys/sem.h"
 
 
+PUBLIC struct Semaphore *semaphoreTable[MAX_SEMAPHORES];
 
 Semaphore *create(int value, int id)
 {
@@ -27,9 +27,10 @@ Semaphore *create(int value, int id)
         return NULL; // ID inválido
     }
 
-    if (semaphoreTable[id].id == id)
+    for (int i=0; i<=MAX_SEMAPHORES;i++) 
     {
-        return NULL; // O semáforo já existe com este ID
+        if((semaphoreTable[i]== id))
+            return NULL; // O semáforo já existe com este ID
     }
 
     Semaphore *sem = &semaphoreTable[id];

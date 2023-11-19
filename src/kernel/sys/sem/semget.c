@@ -12,9 +12,9 @@ ciado a key. Em caso de erro, -1 deve ser retornado.
 #include <include/nanvix/hal.h>
 #include <include/nanvix/klib.h>
 #include <nanvix/pm.h>
-#include <include/sys/sem.h>
+#include <sys/sem.h>
 #include <stdio.h>
 
 PUBLIC int sys_semget(int key){
-
+    struct Sem
 }
