@@ -34,14 +34,15 @@
  * Program arguments.
  */
 
-int key;
+int id;
+int op;
 
 /*
  * Prints program version and exits.
  */
 static void version(void)
 {
-    printf("semget (Nanvix Coreutils) %d.%d\n\n", VERSION_MAJOR, VERSION_MINOR);
+    printf("semop (Nanvix Coreutils) %d.%d\n\n", VERSION_MAJOR, VERSION_MINOR);
     printf("Copyright(C) 2011-2014 Pedro H. Penna\n");
     printf("This is free software under the ");
     printf("GNU General Public License Version 3.\n");
@@ -55,7 +56,7 @@ static void version(void)
  */
 static void usage(void)
 {
-    printf("Usage: semget [options] <id>\n\n");
+    printf("Usage: semop [options] <id> <op>\n\n");
     printf("Brief: Creates a semaphore. If already exists return semaphore id.\n\n");
     printf("Options:\n");
     printf("  --help             Display this information and exit\n");
@@ -70,45 +71,52 @@ static void usage(void)
 static void getargs(int argc, char *const argv[])
 {
     int i;     /* Loop index.         */
-    char *arg; /* Current argument.   */
 
     /* Read command line arguments. */
     for (i = 1; i < argc; i++)
     {
-        arg = argv[i];
-
         /* Parse command line argument. */
-        if (!strcmp(arg, "--help"))
+        if (!strcmp(argv[i], "--help"))
         {
             usage();
         }
-        else if (!strcmp(arg, "--version"))
+        else if (!strcmp(argv[i], "--version"))
         {
             version();
         }
         else
         {
-            key = atoi(arg);
+            id = atoi(argv[i]);
+            op = atoi(argv[i]);
         }
     }
 
     /* Invalid semaphore id. */
-    if (key < 0 || key > 100)
+    if (id < 0 || id > 100 || op < 0)
     {
-        fprintf(stderr, "semget: wrong id for semaphore. Please choose a number between 0 and %d\n", 100);
+        fprintf(stderr, "semop: wrong id for semaphore. Please choose a number between 0 and %d\n", 100);
         exit(EXIT_FAILURE);
     }
 }
 
-int main(int argc, char *const argv[])
-{ // return from the function semget
 
-    // Reading Arguments
-    getargs(argc, argv);
+int main(int argc, char *const argv[]) {
+    
+    
+    id = atoi(argv[1]);
+     op = atoi(argv[2]);
 
-    int x = semop(1, 1);
+        getargs(argc, argv);
 
-    printf("\n %d - retorno kernel ", x);
+    int result = semop(id, op);
 
-    return 0;
+     printf("\n %d - retorno kernel ", result);
+
+
+
+
+
+
 }
+    
+    
