@@ -11,3 +11,16 @@ O valor de retorno da função depende de cmd. Caso esse seja GETVAL, o valor co
 semáforo é retornado. Nos demais casos de conclusão com êxito, 0 deve ser retornado. Em
 caso de erro -1 deve ser retornado retornado.
 */
+
+#include <nanvix/const.h>
+#include <nanvix/hal.h>
+#include <nanvix/klib.h>
+#include <nanvix/pm.h>
+#include <sys/sem.h>
+#include <stdio.h>
+
+PUBLIC int sys_semctl(int semid, int cmd, int val)
+{
+    kprintf("hello kernel: %d - %d - %d", semid, cmd, val);
+    return cmd;
+}
