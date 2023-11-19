@@ -21,7 +21,7 @@ caso de erro -1 deve ser retornado retornado.
 
 PUBLIC int sys_semctl(int semid, int cmd, int val)
 {
-    // IMPORTANTE VERIFICAR SE O ID POSSUi UM SEMAFORO EXISTENTE
+    // IMPORTANTE VERIFICAR SE existe um semaforo com id passado
 
     if (cmd == GETVAL && semid == semaphoreTable[semid].id)
     {
@@ -32,6 +32,7 @@ PUBLIC int sys_semctl(int semid, int cmd, int val)
     {
         semaphoreTable[semid].value = val;
         kprintf("\n SETVAL - KERNEL - %d ", semaphoreTable[semid].value);
+        kprintf("ID - SEMCTL - %d", semaphoreTable[semid].id);
         return 0;
     }
     else if (cmd == IPC_RMID && semid == semaphoreTable[semid].id)
