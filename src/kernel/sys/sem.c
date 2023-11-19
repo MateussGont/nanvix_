@@ -18,16 +18,7 @@ destroy(): destrói o semáforo
 #include <nanvix/pm.h>
 #include "sys/sem.h"
 
-#define MAX_SEMAPHORES 100
 
-typedef struct
-{
-    int value;
-    int id;
-    struct process *list;
-} Semaphore;
-
-Semaphore semaphoreTable[MAX_SEMAPHORES];
 
 Semaphore *create(int value, int id)
 {
