@@ -3,6 +3,10 @@
         "semaphore.h": "c",
         "unistd.h": "c",
         "stat.h": "c",
-        "fcntl.h": "c"
+        "fcntl.h": "c",
+        "sem.h": "c",
+        "const.h": "c",
+        "errno.h": "c",
+        "stddef.h": "c"
     }
 }

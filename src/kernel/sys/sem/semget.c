@@ -13,7 +13,6 @@ ciado a key. Em caso de erro, -1 deve ser retornado.
 #include <nanvix/klib.h>
 #include <nanvix/pm.h>
 #include <stdio.h>
-#include <sys/sem.h>
 
 PUBLIC int sys_semget(int key)
 {

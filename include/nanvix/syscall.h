@@ -265,7 +265,7 @@ EXTERN int sys_clear(void);
  */
 EXTERN int sys_gticks(void);
 
-EXTERN int sys_semget(unsigned key);
+EXTERN int sys_semget(void);
 
 EXTERN int sys_semctl(int semid, int cmd, int val);
 
