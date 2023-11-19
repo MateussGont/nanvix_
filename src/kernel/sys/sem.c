@@ -21,7 +21,7 @@ destroy(): destrói o semáforo
 
 #define MAX_SEMAPHORES 100
 
-Semaphore semaphoreTable[MAX_SEMAPHORES];
+Semaphore semaphoreTable[MAX_SEMAPHORES]; // Tabela de Semaforos
 
 Semaphore *create(int value)
 {
@@ -77,7 +77,7 @@ o processo continua sua execução normalmente. Caso contrário, o processo é b
 void down(Semaphore *sem)
 {
     while (__sync_lock_test_and_set(&sem->lock, 1))
-        ; // Adquire o bloqueio
+        ; // bloqueia a zona critica
 
     if (sem->value > 0)
     {
@@ -88,7 +88,7 @@ void down(Semaphore *sem)
         sleep(sem->chain, 0);
     }
 
-    __sync_lock_release(&sem->lock); // Libera o bloqueio
+    __sync_lock_release(&sem->lock); // libera o bloqueio da zona critica
 }
 
 void up(Semaphore *sem)
