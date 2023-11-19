@@ -52,6 +52,8 @@ Semaphore *create(int value)
 void destroy(Semaphore *sem)
 {
     sem->process = NULL;
+    sem->key = -1;
+    sem->value = -1;
 
     // Verifica se a lista de processos está vazia
     if (sem->process == NULL)

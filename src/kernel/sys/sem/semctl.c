@@ -21,6 +21,35 @@ caso de erro -1 deve ser retornado retornado.
 
 PUBLIC int sys_semctl(int semid, int cmd, int val)
 {
-    kprintf("hello kernel: %d - %d - %d", semid, cmd, val);
-    return cmd;
+    // IMPORTANTE VERIFICAR SE O ID POSSUi UM SEMAFORO EXISTENTE
+
+    if (cmd == GETVAL && semid == semaphoreTable[semid].id)
+    {
+        kprintf("\n GETVAL - KERNEL - %d", semaphoreTable[semid].value);
+        return semaphoreTable[semid].value;
+    }
+    else if (cmd == SETVAL && semid == semaphoreTable[semid].id)
+    {
+        semaphoreTable[semid].value = val;
+        kprintf("\n SETVAL - KERNEL - %d ", semaphoreTable[semid].value);
+        return 0;
+    }
+    else if (cmd == IPC_RMID && semid == semaphoreTable[semid].id)
+    {
+        struct process *temp = semaphoreTable[semid].process->next;
+        semaphoreTable[semid].process = temp;
+
+        if (semaphoreTable[semid].process == NULL)
+        {
+            destroy(&semaphoreTable[semid]);
+            kprintf("\n IPC_RMID - KERNEL - %d (Se value not null conferir)", semaphoreTable[semid].value);
+            return 0;
+        }
+    }
+    else
+    {
+        kprintf("ERRO - SEMCTL - %d", semaphoreTable[semid].id);
+        return -1;
+    }
+    return -1;
 }
