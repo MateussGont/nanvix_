@@ -106,7 +106,7 @@ int main(int argc, char *const argv[])
     // Reading Arguments
     getargs(argc, argv);
 
-    int x = semop(2, 1);
+    int x = semop(1, 1);
 
     printf("\n %d - retorno kernel ", x);
 

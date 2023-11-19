@@ -17,6 +17,30 @@ A função deve retornar 0 em uma conclusão com êxito, ou então -1 em caso de
 
 PUBLIC int sys_semop(int semid, int op)
 {
-    kprintf("hello kernel: %d - %d", semid, op);
-    return op;
+    int pos = 0;
+    while (semaphoreTable[pos].id != semid && pos < MAX_SEMAPHORES) // percorre tabela de semaforos procurando semaforo
+    {
+        pos++;
+    }
+    if (semaphoreTable[pos].id == semid)
+    {
+        if (op == 0)
+        {
+            down(&semaphoreTable[semid]);
+            kprintf("\n DOWN REALIZADO");
+            return 0;
+        }
+        else if (op == 1)
+        {
+            up(&semaphoreTable[semid]);
+            kprintf("\n UP REALIZADO");
+            return 0;
+        }
+        else
+        {
+            kprintf("Operador invalido SEMOP.C");
+            return -1;
+        }
+    }
+    return -1;
 }
