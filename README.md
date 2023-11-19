@@ -46,3 +46,6 @@ id: id do semáforo
 lock: variável de bloqueio do semáforo
 list: lista de processos pra usar o semáforo
 
+# Teste
+
+O teste <code>semaphore_test4</code> simula múltiplos processos leitores e escritores que compartilham acesso a um recurso (um arquivo, no caso). Os semáforos são utilizados para controlar o acesso concorrente, garantindo exclusão mútua entre escritores e permitindo acesso simultâneo para leitores. O teste verifica se a implementação lida corretamente com situações de concorrência.
