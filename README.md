@@ -6,7 +6,7 @@
 
 Alunos: Mateus Gontijo e Milleny Teixeira
 
-# Objetivo
+## Objetivo
 
 O principal objetivo deste trabalho é desenvolver uma implementação funcional de semáforos em um sistema operacional, proporcionando um mecanismo robusto e eficiente para sincronização de processos concorrentes. Os semáforos desempenham um papel crucial na gestão de recursos compartilhados, prevenindo condições de corrida e garantindo a consistência e integridade dos dados.
 
@@ -27,4 +27,22 @@ A implementação do semáforo no sistema Nanvix envolve um bom conhecimento do 
 
  **\src\kernel\sys\sem\semop:** Realiza operações atômicas de incremento/decremento no semáforo identificado por semid, com valores positivos para up() e negativos para down().
 
- 
+ ## Estrutura do Semáforo
+
+A estrutura do semáforo foi desenvolvida utilizando uma lista encadeada com uma struct definida com os seguintes campos:
+
+<code>
+typedef struct
+{
+    int value; 
+    int id;
+    volatile int lock; 
+    struct process *list;
+} Semaphore;
+</code>
+
+value: valor do semáforo 
+id: id do semáforo
+lock: variável de bloqueio do semáforo
+list: lista de processos pra usar o semáforo
+
