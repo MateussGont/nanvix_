@@ -12,13 +12,23 @@ bloqueado no semáforo, o processo é desbloqueado. Caso contrário o valor do s
 
 destroy(): destrói o semáforo
 */
-#include <sys/sem.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <nanvix/pm.h>
+#include "sys/sem.h"
 
+#define MAX_SEMAPHORES 100
 
-PUBLIC struct Semaphore *semaphoreTable[MAX_SEMAPHORES];
+typedef struct
+{
+    int value;
+    int id;
+    volatile int lock; // Adiciona um bloqueio à estrutura do semáforo
+    struct process *list;
+} Semaphore;
+
+Semaphore semaphoreTable[MAX_SEMAPHORES];
 
 Semaphore *create(int value, int id)
 {
@@ -27,10 +37,9 @@ Semaphore *create(int value, int id)
         return NULL; // ID inválido
     }
 
-    for (int i=0; i<=MAX_SEMAPHORES;i++) 
+    if (semaphoreTable[id].id == id)
     {
-        if((semaphoreTable[i]== id))
-            return NULL; // O semáforo já existe com este ID
+        return NULL; // O semáforo já existe com este ID
     }
 
     Semaphore *sem = &semaphoreTable[id];
@@ -62,18 +71,24 @@ void destroy(Semaphore *sem)
         sem->id = -1;
     }
 }
+
 void down(Semaphore *sem)
 {
-    sem->value--;
+    while (__sync_lock_test_and_set(&sem->lock, 1))
+        ; // Adquire o bloqueio
 
-    if (sem->value < 0)
+    if (sem->value > 0)
     {
-        
-        sem->list->next = sem; // Adiciona este semáforo à lista global de semáforos em espera
-        sem->list->next->state = PROC_SLEEPING; // Bloqueia este processo
-
-       
+        sem->value--;
     }
+    else
+    {
+        // Bloqueia o processo atual
+        struct process *current = sem->list; // Obtenha o processo atual
+        current->state = PROC_DEAD;
+    }
+
+    __sync_lock_release(&sem->lock); // Libera o bloqueio
 }
 
 void up(Semaphore *sem)
