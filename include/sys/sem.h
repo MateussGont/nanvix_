@@ -40,5 +40,5 @@ extern int semget(unsigned int key);
 extern int semctl(int semid, int cmd, int val);
 extern int semop(int semid, int op);
 
-#endif
+#endif /* _ASM_FILE_ */
 #endif /* SEM_H_ */
