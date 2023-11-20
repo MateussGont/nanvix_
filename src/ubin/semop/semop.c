@@ -103,14 +103,16 @@ static void getargs(int argc, char *const argv[])
 int main(int argc, char *const argv[]) {
     
     
-    id = atoi(argv[1]);
-     op = atoi(argv[2]);
+        id = atoi(argv[1]);
+        op = atoi(argv[2]);
 
         getargs(argc, argv);
 
+     // Chamada para semop com os argumentos da linha de comando
     int result = semop(id, op);
 
-     printf("\n %d - retorno kernel ", result);
+    // Exibindo o resultado 
+    printf("\n %d - retorno kernel ", result);
 
 
 
