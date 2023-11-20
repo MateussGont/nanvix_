@@ -34,14 +34,16 @@
  * Program arguments.
  */
 
-int key;
+int id;
+int cmd;
+int val;
 
 /*
  * Prints program version and exits.
  */
 static void version(void)
 {
-    printf("semget (Nanvix Coreutils) %d.%d\n\n", VERSION_MAJOR, VERSION_MINOR);
+    printf("semctl (Nanvix Coreutils) %d.%d\n\n", VERSION_MAJOR, VERSION_MINOR);
     printf("Copyright(C) 2011-2014 Pedro H. Penna\n");
     printf("This is free software under the ");
     printf("GNU General Public License Version 3.\n");
@@ -55,7 +57,7 @@ static void version(void)
  */
 static void usage(void)
 {
-    printf("Usage: semget [options] <id>\n\n");
+    printf("Usage: semctl [options] <id> <cmd> <val>\n\n");
     printf("Brief: Creates a semaphore. If already exists return semaphore id.\n\n");
     printf("Options:\n");
     printf("  --help             Display this information and exit\n");
@@ -67,48 +69,34 @@ static void usage(void)
 /*
  * Gets number of the semaphore.
  */
-static void getargs(int argc, char *const argv[])
-{
-    int i;     /* Loop index.         */
-    char *arg; /* Current argument.   */
-
-    /* Read command line arguments. */
-    for (i = 1; i < argc; i++)
-    {
-        arg = argv[i];
-
-        /* Parse command line argument. */
-        if (!strcmp(arg, "--help"))
-        {
-            usage();
-        }
-        else if (!strcmp(arg, "--version"))
-        {
-            version();
-        }
-        else
-        {
-            key = atoi(arg);
-        }
+static void getargs(int argc, char *const argv[]) {
+    if (argc != 4) {
+        fprintf(stderr, "Uso: %s <id> <cmd> <val>\n", argv[0]);
+        exit(EXIT_FAILURE);
     }
 
+    // Converte argumentos da linha de comando para inteiros
+    id = atoi(argv[1]);
+    cmd = atoi(argv[2]);
+    val = atoi(argv[3]);
+
     /* Invalid semaphore id. */
-    if (key < 0 || key > 100)
+    if (id < 0 || id > 100 || val < 0 || cmd < 0)
     {
-        fprintf(stderr, "semget: wrong id for semaphore. Please choose a number between 0 and %d\n", 100);
+        fprintf(stderr, "semctl: wrong id for semaphore. Please choose a number between 0 and %d\n", 100);
         exit(EXIT_FAILURE);
     }
 }
 
-int main(int argc, char *const argv[])
-{ // return from the function semget
-
-    // Reading Arguments
+int main(int argc, char *const argv[]) {
+    // Processa os argumentos da linha de comando
     getargs(argc, argv);
 
-    int x = semctl(1, 1, 3);
+    // Chamada para semctl com os argumentos da linha de comando
+    int result = semctl(id, cmd, val);
 
-    printf("\n %d - retorno kernel ", x);
+    // Exibindo o resultado
+    printf("\n %d - retorno kernel\n", result);
 
     return 0;
 }
