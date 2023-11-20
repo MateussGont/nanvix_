@@ -55,7 +55,7 @@ static void version(void)
  */
 static void usage(void)
 {
-    printf("Usage: semget [options] <id>\n\n");
+    printf("Usage: semget [options] <key>\n\n");
     printf("Brief: Creates a semaphore. If already exists return semaphore id.\n\n");
     printf("Options:\n");
     printf("  --help             Display this information and exit\n");
@@ -70,25 +70,23 @@ static void usage(void)
 static void getargs(int argc, char *const argv[])
 {
     int i;     /* Loop index.         */
-    char *arg; /* Current argument.   */
 
     /* Read command line arguments. */
     for (i = 1; i < argc; i++)
     {
-        arg = argv[i];
-
         /* Parse command line argument. */
-        if (!strcmp(arg, "--help"))
+        if (!strcmp(argv[i], "--help"))
         {
             usage();
         }
-        else if (!strcmp(arg, "--version"))
+        else if (!strcmp(argv[i], "--version"))
         {
             version();
         }
         else
         {
-            key = atoi(arg);
+            key = atoi(argv[i]);
+            
         }
     }
 
@@ -103,12 +101,14 @@ static void getargs(int argc, char *const argv[])
 int main(int argc, char *const argv[])
 { // return from the function semget
 
+     key = atoi(argv[1]);
+   
     // Reading Arguments
     getargs(argc, argv);
 
-    int x = semget(2);
+    int result = semget(key);
 
-    printf("\n %d - retorno kernel ", x);
+    printf("\n %d - retorno kernel ", result);
 
     return 0;
 }
