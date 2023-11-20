@@ -41,36 +41,18 @@ int val;
 /*
  * Prints program version and exits.
  */
-static void version(void)
-{
-    printf("semctl (Nanvix Coreutils) %d.%d\n\n", VERSION_MAJOR, VERSION_MINOR);
-    printf("Copyright(C) 2011-2014 Pedro H. Penna\n");
-    printf("This is free software under the ");
-    printf("GNU General Public License Version 3.\n");
-    printf("There is NO WARRANTY, to the extent permitted by law.\n\n");
-
-    exit(EXIT_SUCCESS);
-}
 
 /*
  * Prints program usage and exits.
  */
-static void usage(void)
-{
-    printf("Usage: semctl [options] <id> <cmd> <val>\n\n");
-    printf("Brief: Creates a semaphore. If already exists return semaphore id.\n\n");
-    printf("Options:\n");
-    printf("  --help             Display this information and exit\n");
-    printf("  --version          Display program version and exit\n");
-
-    exit(EXIT_SUCCESS);
-}
 
 /*
  * Gets number of the semaphore.
  */
-static void getargs(int argc, char *const argv[]) {
-    if (argc != 4) {
+static void getargs(int argc, char *const argv[])
+{
+    if (argc != 4)
+    {
         fprintf(stderr, "Uso: %s <id> <cmd> <val>\n", argv[0]);
         exit(EXIT_FAILURE);
     }
@@ -88,7 +70,8 @@ static void getargs(int argc, char *const argv[]) {
     }
 }
 
-int main(int argc, char *const argv[]) {
+int main(int argc, char *const argv[])
+{
     // Processa os argumentos da linha de comando
     getargs(argc, argv);
 
