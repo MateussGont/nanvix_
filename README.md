@@ -4,7 +4,7 @@
 
 # Implementação de Semáforos no sistema Nanvix
 
-Alunos: Mateus Gontijo e Milleny Teixeira
+Alunos: Mateus Gontijo, Milleny Teixeira e Caio Silva
 
 ## Objetivo
 
