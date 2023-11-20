@@ -17,6 +17,11 @@ A função deve retornar 0 em uma conclusão com êxito, ou então -1 em caso de
 
 PUBLIC int sys_semop(int semid, int op)
 {
+    if (semid <= 0 || semid > MAX_SEMAPHORES)
+    {
+        kprintf("ID INVÁLIDO - SEMOP.C");
+        return -1;
+    }
     int pos = 0;
     while (semaphoreTable[pos].id != semid && pos < MAX_SEMAPHORES) // percorre tabela de semaforos procurando semaforo
     {

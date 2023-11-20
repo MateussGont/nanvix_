@@ -69,7 +69,7 @@ static void usage(void)
  */
 static void getargs(int argc, char *const argv[])
 {
-    int i;     /* Loop index.         */
+    int i; /* Loop index.         */
 
     /* Read command line arguments. */
     for (i = 1; i < argc; i++)
@@ -86,7 +86,6 @@ static void getargs(int argc, char *const argv[])
         else
         {
             key = atoi(argv[i]);
-            
         }
     }
 
@@ -101,16 +100,18 @@ static void getargs(int argc, char *const argv[])
 int main(int argc, char *const argv[])
 { // return from the function semget
 
-     key = atoi(argv[1]);
-   
+    key = atoi(argv[1]);
+
     // Reading Arguments
     getargs(argc, argv);
+
+    printf("VALOR DA KEY - %d", key);
 
     // Chamada para semget com os argumentos da linha de comando
     int result = semget(key);
 
-    //Mostrando o resultado
-    printf("\n %d - retorno kernel ", result);
+    // Mostrando o resultado
+    printf("\n %d - retorno kernel\n", result);
 
     return 0;
 }

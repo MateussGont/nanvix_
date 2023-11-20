@@ -20,6 +20,8 @@ destroy(): destrói o semáforo
 #include <nanvix/klib.h>
 
 #define MAX_SEMAPHORES 100
+#define INVALID_KEY 0;
+#define INVALID_ID 0;
 
 Semaphore semaphoreTable[MAX_SEMAPHORES]; // Tabela de Semaforos
 
@@ -72,7 +74,8 @@ void destroy(Semaphore *sem)
 DOWN: testa o valor do semáforo. Se esse valor for maior que zero, ele é decrementado e
 o processo continua sua execução normalmente. Caso contrário, o processo é bloqueado.
 
-  *Atenção, mecanismo escolhido para exclusão mutua foi de uma pesquisa que fiz e descobri que existe uma tratativa do gcc para operações atomicas.
+  *Atenção, mecanismo escolhido para exclusão mutua foi de uma pesquisa que fiz e descobri que existe uma tratativa do gcc para operações atomicas. Não sabia se era válido mas optei
+  por adicionar
 */
 void down(Semaphore *sem)
 {

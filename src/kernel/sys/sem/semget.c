@@ -17,8 +17,13 @@ ciado a key. Em caso de erro, -1 deve ser retornado.
 
 PUBLIC int sys_semget(unsigned key)
 {
+    if (key <= 0)
+    {
+        kprintf("KEY INVÁLIDA - SEMGET.C");
+        return -1;
+    }
     int pos = 0;
-    while (semaphoreTable[pos].key != key && pos < 100) // percorre tabela de semaforos procurando semaforo com a key especificada
+    while (semaphoreTable[pos].key != key && pos < 100) // percorre tabela de semaforos procurando semaforo com a key especificada (falta inicializar valores da tabela -1)
     {
         pos++;
     }
@@ -26,7 +31,7 @@ PUBLIC int sys_semget(unsigned key)
     if (semaphoreTable[pos].key == key) // se semaforo existe com a key
     {
         semaphoreTable[pos].process = curr_proc; // processo atual utiliza o semaforo
-        kprintf("\n %d - SEMAFORO JA EXISTE COM ESSA KEY");
+        kprintf("\n %d - SEMAFORO JA EXISTE COM ESSA KEY \n");
         return semaphoreTable[pos].id; // retorna o id do semaforo
     }
     else if (pos <= MAX_SEMAPHORES && semaphoreTable[pos].key != key)
@@ -38,7 +43,7 @@ PUBLIC int sys_semget(unsigned key)
         }
 
         semaphoreTable[temp->id].key = key; // define a Key do id criado como a key especificada
-        kprintf("\n %d - SEMAFORO CRIADO ID DO SEMAFORO", semaphoreTable[temp->id].id);
+        kprintf("\n ID DO SEMAFORO: %d - SEMAFORO CRIADO", semaphoreTable[temp->id].id);
         return semaphoreTable[temp->id].id; // retorna o id do semaforo criado
     }
     else

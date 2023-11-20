@@ -70,7 +70,7 @@ static void usage(void)
  */
 static void getargs(int argc, char *const argv[])
 {
-    int i;     /* Loop index.         */
+    int i; /* Loop index.         */
 
     /* Read command line arguments. */
     for (i = 1; i < argc; i++)
@@ -99,26 +99,18 @@ static void getargs(int argc, char *const argv[])
     }
 }
 
+int main(int argc, char *const argv[])
+{
 
-int main(int argc, char *const argv[]) {
-    
-    
-        id = atoi(argv[1]);
-        op = atoi(argv[2]);
+    id = atoi(argv[1]);
+    op = atoi(argv[2]);
 
-        getargs(argc, argv);
+    getargs(argc, argv);
 
-     // Chamada para semop com os argumentos da linha de comando
+    printf("%d - %d - Valores semop", id, op);
+    // Chamada para semop com os argumentos da linha de comando
     int result = semop(id, op);
 
-    // Exibindo o resultado 
+    // Exibindo o resultado
     printf("\n %d - retorno kernel ", result);
-
-
-
-
-
-
 }
-    
-    
