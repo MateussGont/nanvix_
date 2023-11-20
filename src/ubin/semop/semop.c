@@ -68,49 +68,42 @@ static void usage(void)
 /*
  * Gets number of the semaphore.
  */
-static void getargs(int argc, char *const argv[])
-{
-    int i; /* Loop index.         */
-
-    /* Read command line arguments. */
-    for (i = 1; i < argc; i++)
-    {
-        /* Parse command line argument. */
-        if (!strcmp(argv[i], "--help"))
-        {
-            usage();
-        }
-        else if (!strcmp(argv[i], "--version"))
-        {
-            version();
-        }
-        else
-        {
-            id = atoi(argv[i]);
-            op = atoi(argv[i]);
-        }
+static void getargs(int argc, char *const argv[]) {
+    if (argc != 4) {
+        fprintf(stderr, "Uso: %s <id> <op>\n", argv[0]);
+        exit(EXIT_FAILURE);
     }
 
+    // Converte argumentos da linha de comando para inteiros
+    id = atoi(argv[1]);
+    op = atoi(argv[2]);
+    
+
     /* Invalid semaphore id. */
-    if (id < 0 || id > 100 || op < 0)
+    if (id < 0 || id > 100 || op< 0)
     {
-        fprintf(stderr, "semop: wrong id for semaphore. Please choose a number between 0 and %d\n", 100);
+        fprintf(stderr, "semctl: wrong id for semaphore. Please choose a number between 0 and %d\n", 100);
         exit(EXIT_FAILURE);
     }
 }
 
-int main(int argc, char *const argv[])
-{
-
+int main(int argc, char *const argv[]) {
     id = atoi(argv[1]);
     op = atoi(argv[2]);
+    
+   getargs(argc, argv);
 
-    getargs(argc, argv);
 
-    printf("%d - %d - Valores semop", id, op);
-    // Chamada para semop com os argumentos da linha de comando
+    
     int result = semop(id, op);
 
-    // Exibindo o resultado
-    printf("\n %d - retorno kernel ", result);
+     printf("\n %d - retorno kernel ", result);
+
+
+
+
+
+
 }
+    
+    
