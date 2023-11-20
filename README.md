@@ -93,3 +93,7 @@ O teste <code>semaphore_test4</code> simula múltiplos processos leitores e escr
 A implementação de semáforos no sistema Nanvix busca oferecer uma solução eficiente para a sincronização de processos concorrentes, abordando desafios como condições de corrida e assegurando a integridade dos dados. 
 
 A estrutura utiliza uma lista encadeada para gerenciar os processos bloqueados e manipular o valor do semáforo. As operações básicas e de controle foram implementadas de forma modular, facilitando a compreensão e manutenção do código. Além disso, testes foram criados para validar o correto funcionamento das operações, incluindo o teste semaphore_test4 que simula situações de concorrência entre leitores e escritores.
+
+
+# CONSIDERAÇÕES 
+O usuario rafaelamesquita foi de utilização do integrante Mateus Silva Gontijo
