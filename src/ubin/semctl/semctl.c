@@ -92,6 +92,8 @@ int main(int argc, char *const argv[]) {
     // Processa os argumentos da linha de comando
     getargs(argc, argv);
 
+    printf("%d - %d - %d - Valores semop", id, cmd, val);
+
     // Chamada para semctl com os argumentos da linha de comando
     int result = semctl(id, cmd, val);
 
