@@ -106,8 +106,10 @@ int main(int argc, char *const argv[])
     // Reading Arguments
     getargs(argc, argv);
 
+    // Chamada para semget com os argumentos da linha de comando
     int result = semget(key);
 
+    //Mostrando o resultado
     printf("\n %d - retorno kernel ", result);
 
     return 0;
