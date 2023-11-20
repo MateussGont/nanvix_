@@ -94,6 +94,12 @@ void down(Semaphore *sem)
     __sync_lock_release(&sem->lock); // libera o bloqueio da zona critica
 }
 
+/*
+UP : up(): testa se o valor do semáforo é zero. Em caso afirmativo e existir algum processo
+bloqueado no semáforo, o processo é desbloqueado. Caso contrário o valor do semáforo
+é incrementado.
+*/
+
 void up(Semaphore *sem)
 {
     while (__sync_lock_test_and_set(&sem->lock, 1))

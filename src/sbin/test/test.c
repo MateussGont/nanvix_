@@ -498,94 +498,93 @@ int semaphore_test3(void)
 
 int semaphore_test4(void)
 {
-    pid_t pid;                  /* Process ID.              */
-    int file_fd;                /* File descriptor.         */
-    int write_sem;              /* Semaphore for writers.   */
-    int mutex;                  /* Mutex for file access.   */
-    const int BUFFER_SIZE = 1;  /* Buffer size.             */
-    const int NR_READERS = 3;   /* Number of readers.       */
-    const int NR_WRITERS = 2;   /* Number of writers.       */
-    const int NR_ITERATIONS = 5; /* Number of iterations.    */
+	pid_t pid;	   /* Process ID.              */
+	int file_fd;   /* File descriptor.         */
+	int write_sem; /* Semaphore for writers.   */
+	int mutex;	   /* Mutex for file access.   */
+	// const int BUFFER_SIZE = 1;	 /* Buffer size.             */
+	const int NR_READERS = 3;	 /* Number of readers.       */
+	const int NR_WRITERS = 2;	 /* Number of writers.       */
+	const int NR_ITERATIONS = 5; /* Number of iterations.    */
 
-    /* Create file. */
-    file_fd = open("file.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    if (file_fd < 0)
-        return -1;
+	/* Create file. */
+	file_fd = open("file.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+	if (file_fd < 0)
+		return -1;
 
-    /* Create semaphores. */
-    SEM_CREATE(write_sem, 1);
-    SEM_CREATE(mutex, 1);
+	/* Create semaphores. */
+	SEM_CREATE(write_sem, 1);
+	SEM_CREATE(mutex, 1);
 
-    /* Initialize semaphores. */
-    SEM_INIT(write_sem, 1);
-    SEM_INIT(mutex, 1);
+	/* Initialize semaphores. */
+	SEM_INIT(write_sem, 1);
+	SEM_INIT(mutex, 1);
 
-    /* Create multiple writers. */
-    for (int i = 0; i < NR_WRITERS; i++)
-    {
-        if ((pid = fork()) < 0)
-            return -1;
+	/* Create multiple writers. */
+	for (int i = 0; i < NR_WRITERS; i++)
+	{
+		if ((pid = fork()) < 0)
+			return -1;
 
-        /* Writer. */
-        else if (pid == 0)
-        {
-            for (int iter = 0; iter < NR_ITERATIONS; iter++)
-            {
-                SEM_DOWN(write_sem);
-                SEM_DOWN(mutex);
+		/* Writer. */
+		else if (pid == 0)
+		{
+			for (int iter = 0; iter < NR_ITERATIONS; iter++)
+			{
+				SEM_DOWN(write_sem);
+				SEM_DOWN(mutex);
 
-                // Write to file
-                dprintf(file_fd, "Writer %d - Iteration %d\n", i, iter);
+				PUT_ITEM(file_fd, iter);
 
-                SEM_UP(mutex);
-                SEM_UP(write_sem);
-            }
+				SEM_UP(mutex);
+				SEM_UP(write_sem);
+			}
 
-            close(file_fd);
-            _exit(EXIT_SUCCESS);
-        }
-    }
+			close(file_fd);
+			_exit(EXIT_SUCCESS);
+		}
+	}
 
-    /* Create multiple readers. */
-    for (int i = 0; i < NR_READERS; i++)
-    {
-        if ((pid = fork()) < 0)
-            return -1;
+	/* Create multiple readers. */
+	for (int i = 0; i < NR_READERS; i++)
+	{
+		if ((pid = fork()) < 0)
+			return -1;
 
-        /* Reader. */
-        else if (pid == 0)
-        {
-            char buffer[256];
+		/* Reader. */
+		else if (pid == 0)
+		{
+			char buffer[256];
 
-            for (int iter = 0; iter < NR_ITERATIONS; iter++)
-            {
-                SEM_DOWN(mutex);
+			for (int iter = 0; iter < NR_ITERATIONS; iter++)
+			{
+				SEM_DOWN(mutex);
 
-                // Read from file
-                lseek(file_fd, 0, SEEK_SET);
-                int bytes_read = read(file_fd, buffer, sizeof(buffer));
-                buffer[bytes_read] = '\0';
-                printf("Reader %d - Iteration %d:\n%s\n", i, iter, buffer);
+				// Read from file
+				lseek(file_fd, 0, SEEK_SET);
+				int bytes_read = read(file_fd, buffer, sizeof(buffer));
+				buffer[bytes_read] = '\0';
+				printf("Reader %d - Iteration %d:\n%s\n", i, iter, buffer);
 
-                SEM_UP(mutex);
-            }
+				SEM_UP(mutex);
+			}
 
-            close(file_fd);
-            _exit(EXIT_SUCCESS);
-        }
-    }
+			close(file_fd);
+			_exit(EXIT_SUCCESS);
+		}
+	}
 
-    /* Wait for all processes to finish. */
-    for (int i = 0; i < NR_READERS + NR_WRITERS; i++)
-        wait(NULL);
+	/* Wait for all processes to finish. */
+	for (int i = 0; i < NR_READERS + NR_WRITERS; i++)
+		wait(NULL);
 
-    /* Destroy semaphores. */
-    SEM_DESTROY(write_sem);
-    SEM_DESTROY(mutex);
+	/* Destroy semaphores. */
+	SEM_DESTROY(write_sem);
+	SEM_DESTROY(mutex);
 
-    unlink("file.txt");
+	unlink("file.txt");
 
-    return 0;
+	return 0;
 }
 
 /*============================================================================*
