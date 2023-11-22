@@ -35,10 +35,11 @@ PUBLIC int sys_semctl(int semid, int cmd, int val)
         kprintf("\n ID - SEMCTL - %d \n", semaphoreTable[semid].id);
         return 0;
     }
-    else if (cmd == IPC_RMID && semid == semaphoreTable[semid].id)
+    else if (cmd == IPC_RMID && semid == semaphoreTable[semid].id && semaphoreTable[semid].lock == 0)
     {
-        struct process *temp = semaphoreTable[semid].process->next;
-        semaphoreTable[semid].process = temp;
+        struct process *temp = semaphoreTable[semid].process->next; // pega o próximo processo e salva
+        semaphoreTable[semid].process = temp;                       // coloca o proximo processo do semaforo no lugar o anterior
+        semaphoreTable[semid].chain = temp->chain;
 
         if (semaphoreTable[semid].process == NULL)
         {

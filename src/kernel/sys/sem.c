@@ -32,6 +32,7 @@ Semaphore *create(int value)
     while (id < MAX_SEMAPHORES && semaphoreTable[id].id == id)
     {
         id++;
+        kprintf("ID = %d", id);
     }
 
     // Se todos os IDs estão em uso, retorna NULL.
@@ -79,8 +80,13 @@ o processo continua sua execução normalmente. Caso contrário, o processo é b
 */
 void down(Semaphore *sem)
 {
-    while (__sync_lock_test_and_set(&sem->lock, 1))
-        ; // bloqueia a zona critica
+    while (sem->lock != 0)
+    {
+        // wait
+    }
+
+    // adquire lock
+    sem->lock = 1;
 
     if (sem->value > 0)
     {
@@ -88,10 +94,10 @@ void down(Semaphore *sem)
     }
     else
     { // Bloqueia o processo atual
-        sleep(sem->chain, 0);
+        sleep(sem->chain, PRIO_USER);
     }
 
-    __sync_lock_release(&sem->lock); // libera o bloqueio da zona critica
+    sem->lock = 0;
 }
 
 /*
@@ -102,8 +108,14 @@ bloqueado no semáforo, o processo é desbloqueado. Caso contrário o valor do s
 
 void up(Semaphore *sem)
 {
-    while (__sync_lock_test_and_set(&sem->lock, 1))
-        ;
+    while (sem->lock != 0)
+    {
+        // wait
+    }
+
+    // adquire lock
+    sem->lock = 1;
+
     if (sem->value == 0 && sem->chain != NULL)
     {
         wakeup(sem->chain);
@@ -114,5 +126,5 @@ void up(Semaphore *sem)
         sem->value++;
     }
 
-    __sync_lock_release(&sem->lock);
+    sem->lock = 0;
 }
