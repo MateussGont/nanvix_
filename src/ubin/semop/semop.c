@@ -114,7 +114,7 @@ static void getargs(int argc, char *const argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    if(op = 0){
+    if(op ==  0){
         fprintf(stderr, "semop: wrong value for operation . Please choose a number less than 0 or bigger than 0 %d\n", 0);
         exit(EXIT_FAILURE);
     }
