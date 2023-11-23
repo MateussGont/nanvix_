@@ -25,13 +25,13 @@ PUBLIC int sys_semctl(int semid, int cmd, int val)
 
     if (cmd == GETVAL && semid == semaphoreTable[semid].id)
     {
-        kprintf("\n GETVAL - KERNEL - %d", semaphoreTable[semid].value);
+        kprintf("\n GETVALUE - KERNEL - %d", semaphoreTable[semid].value);
         return semaphoreTable[semid].value; // GETVAL, retorna o valor corrente do semáforo
     }
     else if (cmd == SETVAL && semid == semaphoreTable[semid].id)
     {
         semaphoreTable[semid].value = val;
-        kprintf("\n SETVAL - KERNEL - %d ", semaphoreTable[semid].value); // SETVAL, define o valor do semáforo como sendo val
+        kprintf("\n SETVALUE - KERNEL - %d ", semaphoreTable[semid].value); // SETVAL, define o valor do semáforo como sendo val
         kprintf("\n ID - SEMCTL - %d \n", semaphoreTable[semid].id);
         return 0;
     }

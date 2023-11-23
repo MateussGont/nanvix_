@@ -40,7 +40,7 @@ typedef struct Semaphore
     unsigned key;
     int value;
     int id;
-    volatile int lock;       // Adiciona um bloqueio à estrutura do semáforo
+    int turn;                // Adiciona um bloqueio à estrutura do semáforo
     struct process **chain;  // lista de processos sleep
     struct process *process; // processo
 } Semaphore;

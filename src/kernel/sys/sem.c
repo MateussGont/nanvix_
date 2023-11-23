@@ -32,7 +32,7 @@ Semaphore *create(int value)
     while (id < MAX_SEMAPHORES && semaphoreTable[id].id == id)
     {
         id++;
-        kprintf("ID = %d", id);
+        // kprintf("ID = %d", id);
     }
 
     // Se todos os IDs estão em uso, retorna NULL.
@@ -62,6 +62,7 @@ void destroy(Semaphore *sem)
     sem->process = NULL;
     sem->key = -1;
     sem->value = -1;
+    sem->chain = NULL;
 
     // Verifica se a lista de processos está vazia
     if (sem->process == NULL)
@@ -75,18 +76,20 @@ void destroy(Semaphore *sem)
 DOWN: testa o valor do semáforo. Se esse valor for maior que zero, ele é decrementado e
 o processo continua sua execução normalmente. Caso contrário, o processo é bloqueado.
 
-  *Atenção, mecanismo escolhido para exclusão mutua foi de uma pesquisa que fiz e descobri que existe uma tratativa do gcc para operações atomicas. Não sabia se era válido mas optei
-  por adicionar
+  *Atenção, mecanismo escolhido para exclusão mutua foi de uma pesquisa que fiz e descobri que existe uma tratativa do gcc para operações atomicas. Não sabia se era válido então não utilizei
+  porem existe um erro ao fazer o test aonde aparentemente os processos estão entrando em deadlock, tenti alterar o mecanismo de exclusão mutua para algumas formas diferentes que
+  procurei porem sem sucesso, não consegui encontrar o que pode estar dando o problema.
+  while (__sync_lock_test_and_set(&sem->lock, 1)) {
+        // Espera ativa (busy wait)
+    }
+    __sync_lock_release(&sem->lock);
 */
 void down(Semaphore *sem)
 {
-    while (sem->lock != 0)
+    while (sem->turn != 0)
     {
-        // wait
+        // espera ativa alternada
     }
-
-    // adquire lock
-    sem->lock = 1;
 
     if (sem->value > 0)
     {
@@ -97,7 +100,7 @@ void down(Semaphore *sem)
         sleep(sem->chain, PRIO_USER);
     }
 
-    sem->lock = 0;
+    sem->turn = 1;
 }
 
 /*
@@ -108,13 +111,10 @@ bloqueado no semáforo, o processo é desbloqueado. Caso contrário o valor do s
 
 void up(Semaphore *sem)
 {
-    while (sem->lock != 0)
+    while (sem->turn != 1)
     {
-        // wait
+        // espera ativa alternada
     }
-
-    // adquire lock
-    sem->lock = 1;
 
     if (sem->value == 0 && sem->chain != NULL)
     {
@@ -126,5 +126,5 @@ void up(Semaphore *sem)
         sem->value++;
     }
 
-    sem->lock = 0;
+    sem->turn = 0;
 }

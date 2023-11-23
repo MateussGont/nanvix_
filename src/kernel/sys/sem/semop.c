@@ -26,20 +26,22 @@ PUBLIC int sys_semop(int semid, int op)
     while (semaphoreTable[pos].id != semid && pos < MAX_SEMAPHORES) // percorre tabela de semaforos procurando semaforo
     {
         pos++;
-        kprintf("POS - %d", pos);
+        // kprintf("POS - %d", pos);
     }
     if (semaphoreTable[pos].id == semid)
     {
         if (op <= -1)
         {
             down(&semaphoreTable[semid]);
-            kprintf("\n DOWN REALIZADO - ID: %d", semaphoreTable[semid].id);
+            // semaphoreTable[semid].lock = 0;
+            kprintf("\n DOWN REALIZADO - ID_table: %d ID_id: %d", semid, semaphoreTable[semid].id);
             return 0;
         }
         else if (op >= 1)
         {
             up(&semaphoreTable[semid]);
-            kprintf("\n UP REALIZADO - ID: %d", semaphoreTable[semid].id);
+            // semaphoreTable[semid].lock = 0;
+            kprintf("\n UP REALIZADO - ID_table: %d ID_id: %d", semid, semaphoreTable[semid].id);
             return 0;
         }
         else
